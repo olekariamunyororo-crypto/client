@@ -1435,7 +1435,7 @@ async function _startGame(meuLancamento, team, charId, enemyFaction, online = fa
       const fs = document.documentElement.requestFullscreen?.();
       // trava de orientação só depois da tela cheia (a API exige fullscreen). Android respeita;
       // WebKit REJEITA a promessa, e sem o catch a rejeição derrubava o launch (#431/#432).
-      if (TOUCH && fs?.then) fs.then(() => { try { screen.orientation?.lock?.('landscape')?.catch?.(() => {}); } catch {} }).catch(() => {});
+      if (TOUCH && fs?.then) fs.then(() => { try { screen.orientation?.lock?.('any')?.catch?.(() => {}); } catch {} }).catch(() => {});
       else fs?.catch?.(() => {});
     } catch {}
   }

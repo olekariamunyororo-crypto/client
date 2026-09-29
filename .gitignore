@@ -239,3 +239,4 @@ artifacts/ops/
 artifacts/lajes-visual/
 
 # Local diagnostic captures and isolated preview snapshots.
+.env.local

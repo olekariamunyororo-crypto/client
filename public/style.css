@@ -2980,3 +2980,13 @@ html[data-ui="legacy"] #load-map{font-family:var(--font);font-weight:700}
   #map-screen .ms-actions .btn-big { padding: 9px 26px; }
   #map-screen .ms-actions .btn-big > * { font-size: 16px; }
 }
+
+/* ===== RETRATO (portrait) no toque: sem aviso de girar, controles acima dos slots de arma ===== */
+@media (orientation:portrait) and (pointer:coarse){
+  #rotate-prompt{display:none!important}
+  #touch-ui .touch-joy{bottom:calc(90px + var(--sb))}
+  #touch-ui .touch-reload{bottom:calc(106px + var(--sb))}
+  #touch-ui .touch-crouch{bottom:calc(110px + var(--sb))}
+  #touch-ui .touch-ads{bottom:calc(206px + var(--sb))}
+  #touch-ui .touch-pickup{bottom:calc(150px + var(--sb))}
+}

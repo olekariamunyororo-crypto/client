@@ -3023,6 +3023,12 @@ export class Game {
     if (shadows) this.renderer.shadowMap.needsUpdate = true;
     this.scene.traverse(o => { if (o.material) o.material.needsUpdate = true; });
   }
+  _fovPortrait(f) {
+    const a = innerWidth / innerHeight;
+    if (a >= 1) return f;
+    const h = 2 * Math.atan(Math.tan(37.5 * Math.PI / 180) / a) * 180 / Math.PI;
+    return Math.min(100, h) * (f / 70);
+  }
   onResize() {
     this.camera.aspect = innerWidth / innerHeight;
     this.camera.updateProjectionMatrix();
@@ -5966,7 +5972,7 @@ export class Game {
     // Every other weapon does light iron-sight ADS — the gun stays on screen and the
     // crosshair stays visible so you can see exactly where you're aiming.
     const realScope = p.scoped && !!WEAPONS[p.weapon].scope;
-    const tFov = p.scoped ? this._zoomFov(p.weapon) : (sprint && moving ? 76 : 70);
+    const tFov = this._fovPortrait(p.scoped ? this._zoomFov(p.weapon) : (sprint && moving ? 76 : 70));
     // ZOOM EM <=120 ms (G3-R1): era um lerp exponencial dt*16 (~63% em 62 ms, mas ~250 ms pra
     // fechar) — a luneta ficava meio-caminho e a tela sem arma, sem mira e sem luneta. Agora é
     // rampa de DURAÇÃO FIXA sobre a distância que falta, então o ADS fecha sempre no mesmo

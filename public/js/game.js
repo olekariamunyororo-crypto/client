@@ -885,6 +885,7 @@ export class Game {
     // Os moldes autorados chegam a oito unidades após normalizar a câmera; far=50 evita
     // cortar a arma sem alterar pose, escala ou enquadramento.
     this.vmCamera = new THREE.PerspectiveCamera(vmFovForAspect(this.camera.aspect), this.camera.aspect, 0.01, 50);
+    this.onResize();
     /* RE-ENQUADRA com a lente de verdade: o 1º _vmFrame(true) rodou DENTRO do
        _buildViewModels (linha 622), ANTES desta vmCamera existir — a trava de borda usou o
        fallback de 62° e o cache de aspecto (_vmFrameAspect) impedia o recálculo pra
@@ -3033,14 +3034,18 @@ export class Game {
     this.camera.aspect = innerWidth / innerHeight;
     this.camera.updateProjectionMatrix();
     if (this.vmCamera) {
-      this.vmCamera.aspect = this.camera.aspect;
+      const por = this.camera.aspect < 1;
+      const vasp = por ? 16 / 9 : this.camera.aspect;
+      this.vmCamera.aspect = vasp;
       const melee = this.vm?.melee?.active;
       const authored = !melee && this.vm?.authored?.active(this.player?.weapon);
       this.vmCamera.fov = melee
-        ? this.vm.melee.fov(this.camera.aspect)
+        ? this.vm.melee.fov(vasp)
         : authored
-        ? this.vm.authored.fov(this.player?.weapon, this.camera.aspect)
-        : vmFovForAspect(this.camera.aspect);
+        ? this.vm.authored.fov(this.player?.weapon, vasp)
+        : vmFovForAspect(vasp);
+      if (por) { const W = innerWidth, H = innerHeight, fh = W * 9 / 16; this.vmCamera.setViewOffset(W, fh, 0, fh - H, W, H); }
+      else this.vmCamera.clearViewOffset();
       this.vmCamera.updateProjectionMatrix();
     }
   }
